@@ -1,18 +1,18 @@
 import express from 'express';
 import httpStatus from 'http-status';
 import { param, body, validationResult } from 'express-validator';
-import schemaPackage from '../schema';
+import { userSchema } from '../schema';
 import UserService from '../../services/user';
-import UserType from '../../enums/user-type';
+import { UserType } from '../../enumerators/user';
 import { schemaValidation, authenticate, authorize } from '../middlewares';
 import { ValidationCodeError } from '../../utils/error/business-errors';
-import { controllerPaginationHelper } from '../../utils/tools';
+import { controllerPaginationHelper } from '../../utils/utils';
 import { commonFilters, userFilters } from './filter';
 
 const routes = express.Router();
 
 routes.post('/',
-  schemaValidation(schemaPackage.user.create),
+  schemaValidation(userSchema.create),
   async (req, res, next) => {
     let response;
 
@@ -28,7 +28,7 @@ routes.post('/',
 routes.post('/admin',
   authenticate,
   authorize([UserType.ADMIN]),
-  schemaValidation(schemaPackage.user.create),
+  schemaValidation(userSchema.create),
   async (req, res, next) => {
     let response;
 
@@ -116,7 +116,7 @@ routes.put('/:id',
   authenticate,
   authorize([UserType.ADMIN, UserType.MEDIC, UserType.PATIENT]),
   param('id').isUUID().withMessage(ValidationCodeError.INVALID_ID),
-  schemaValidation(schemaPackage.user.update),
+  schemaValidation(userSchema.update),
   async (req, res, next) => {
     let response;
 

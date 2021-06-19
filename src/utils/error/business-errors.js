@@ -13,15 +13,6 @@ const UserCodeError = {
   EMAIL_ALREADY_REGISTERED: 'email_already_registered',
 };
 
-const MedicCodeError = {
-  MEDIC_NOT_FOUND: 'medic_not_found',
-  CRM_ALREADY_REGISTERED: 'crm_already_registered',
-};
-
-const AppointmentCodeError = {
-  APPOINTMENT_NOT_FOUND: 'appointment_not_found',
-};
-
 const AuthCodeError = {
   BAD_CREDENTIALS: 'bad_credentials',
   ACCESS_NOT_ALLOWED: 'access_not_allowed',
@@ -30,8 +21,6 @@ const AuthCodeError = {
 
 export {
   UserCodeError,
-  MedicCodeError,
   ValidationCodeError,
   AuthCodeError,
-  AppointmentCodeError,
 };

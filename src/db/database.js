@@ -5,7 +5,7 @@
 import fs from 'fs';
 import path from 'path';
 import Sequelize from 'sequelize';
-import Constants from '../utils/constants';
+import Constants from '../constants';
 
 const sequelize = new Sequelize(
   Constants.database.name,

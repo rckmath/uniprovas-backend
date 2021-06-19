@@ -38,12 +38,5 @@ export default (sequelize, DataTypes) => {
     deletedAt: 'deletedAt',
   });
 
-  User.associate = (models) => {
-    User.hasOne(models.Medic, {
-      as: 'medic',
-      foreignKey: 'userId',
-    });
-  };
-
   return User;
 };

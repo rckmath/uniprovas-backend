@@ -1,14 +1,14 @@
 import express from 'express';
 import httpStatus from 'http-status';
-import schemaPackage from '../schema';
+import { authSchema } from '../schema';
 import AuthService from '../../services/auth';
 import { schemaValidation, authenticate, authorize } from '../middlewares';
-import UserType from '../../enums/user-type';
+import { UserType } from '../../enumerators/user';
 
 const routes = express.Router();
 
 routes.post('/',
-  schemaValidation(schemaPackage.auth.signIn),
+  schemaValidation(authSchema.signIn),
   async (req, res, next) => {
     let response;
 

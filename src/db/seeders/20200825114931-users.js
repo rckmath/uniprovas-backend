@@ -1,7 +1,7 @@
 require('dotenv').config();
 const dayjs = require('dayjs');
-const UserType = require('../../enums/user-type').default;
-const { sha256 } = require('../../utils/tools');
+const { UserType } = require('../../enumerators/user').default;
+const { sha256 } = require('../../utils/utils');
 
 module.exports = {
   up: async (queryInterface) => {
@@ -26,7 +26,7 @@ module.exports = {
     await queryInterface.bulkInsert('tb_user', [{
       id: '5df95340-736e-4e11-b2fe-481d51275bfc',
       str_name: 'System Admin',
-      str_email: 'system-admin@medtech.com.br',
+      str_email: 'system-admin@unirepo.com.br',
       str_password: sha256(process.env.SYSTEM_PASSWORD),
       int_user_type: UserType.ADMIN,
       ...baseEntity,

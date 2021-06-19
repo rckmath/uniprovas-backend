@@ -8,17 +8,17 @@
   "scripts": {
     "env:dev": "cp .env-development .env",
     "env:prod": "cp .env-production .env",
+    "migrate": "yarn sequelize-cli db:migrate",
+    "seed-db": "yarn sequelize-cli db:seed:all",
+    "lint": "yarn eslint -c .eslintrc --ext .js ./src",
     "build:dev": "yarn env:dev & docker-compose build",
     "build:prod": "yarn env:prod & docker-compose build",
     "docker:dev": "docker-compose --env-file .env-development up",
     "docker:prod": "docker-compose --env-file .env-production up",
-    "lint": "yarn eslint -c .eslintrc --ext .js ./src",
-    "start": "set NODE_ENV=development& nodemon -L --exec babel-node ./index.js",
-    "start:prod": "set NODE_ENV=production& yarn babel-node ./index.js",
-    "migrate": "yarn sequelize-cli db:migrate",
     "migration-undo": "yarn sequelize-cli db:migrate:undo --name",
     "migration-undo-all": "yarn sequelize-cli db:migrate:undo:all",
-    "seed-db": "yarn sequelize-cli db:seed:all"
+    "start": "set NODE_ENV=production && yarn babel-node ./index.js",
+    "start:dev": "set NODE_ENV=development && nodemon -L --exec babel-node ./index.js"
   },
   "dependencies": {
     "@babel/register": "^7.14.5",

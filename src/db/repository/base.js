@@ -2,7 +2,7 @@ import { Op } from 'sequelize';
 import dayjs from 'dayjs';
 import httpStatus from 'http-status';
 import ExtendableError from '../../utils/error/extendable';
-import ErrorType from '../../enums/error-type';
+import ErrorType from '../../enumerators/error';
 
 const exclude = ['password', 'recoveryToken', 'recoveryTokenExpiresAt'];
 

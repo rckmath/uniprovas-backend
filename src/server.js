@@ -1,5 +1,4 @@
 import express from 'express';
-import bodyParser from 'body-parser';
 import compress from 'compression';
 import methodOverride from 'method-override';
 import cors from 'cors';
@@ -7,16 +6,15 @@ import helmet from 'helmet';
 import httpStatus from 'http-status';
 import morgan from 'morgan';
 import routes from './routes';
-import ErrorType from './enums/error-type';
-import Constants from './utils/constants';
+import ErrorType from './enumerators/error';
+import Constants from './constants';
 
 const app = express();
 
 if (Constants.env === 'development') { app.use(morgan('dev')); }
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json({ limit: '20mb', type: 'application/json' }));
-app.use(multer());
+app.use(express.json({ limit: '20mb', type: 'application/json' }));
+app.use(express.urlencoded({ extended: true }));
 app.use(compress());
 app.use(methodOverride());
 app.use(helmet());
