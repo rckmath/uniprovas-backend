@@ -1,6 +1,6 @@
 require('dotenv').config();
 const dayjs = require('dayjs');
-const { UserType } = require('../../enumerators/user').default;
+const { UserType } = require('../../enumerators/user');
 const { sha256 } = require('../../utils/utils');
 
 module.exports = {
@@ -8,7 +8,7 @@ module.exports = {
     const exist = await queryInterface.rawSelect('tb_user', {
       where: {
         id: '5df95340-736e-4e11-b2fe-481d51275bfc',
-        str_email: 'system-admin@medtech.com.br',
+        str_email: 'system-admin@unirepo.com.br',
         str_password: sha256(process.env.SYSTEM_PASSWORD),
       },
     }, ['str_email']);
@@ -16,6 +16,7 @@ module.exports = {
     if (exist) { return; }
 
     const now = dayjs().toDate();
+
     const baseEntity = {
       dt_created_at: now,
       dt_updated_at: now,

@@ -3,6 +3,8 @@ import { generateTokens } from '../../mechanisms/google';
 
 export default class GoogleAuthService {
   static async OAuth() {
+    console.log(Constants.google);
+
     return generateTokens({
       clientId: Constants.google.clientId,
       clientSecret: Constants.google.clientSecret,

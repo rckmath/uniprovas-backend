@@ -23,7 +23,7 @@ routes.post('/',
 
 routes.post('/logout',
   authenticate,
-  authorize([UserType.ADMIN, UserType.MEDIC, UserType.PATIENT]),
+  authorize([UserType.ADMIN, UserType.STUDENT]),
   async (_req, res, next) => {
     let response;
 

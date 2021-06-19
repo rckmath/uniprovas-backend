@@ -51,7 +51,7 @@ const Toolbox = {
 
 export default class UserService {
   static async createPatient(user) {
-    user.type = UserType.PATIENT;
+    user.type = UserType.STUDENT;
 
     return UserService.create(user);
   }
@@ -100,11 +100,9 @@ export default class UserService {
     return user;
   }
 
-  static async getAllWithPagination(searchParameter, actor) {
+  static async getAllWithPagination(searchParameter) {
     let response = null;
     let where = {};
-
-    if (actor.userType === UserType.MEDIC) { where.userType = UserType.PATIENT; }
 
     const commonQuery = SearchParameter.createCommonQuery(searchParameter);
     const userQuery = SearchParameter.createUserQuery(searchParameter);
@@ -130,20 +128,6 @@ export default class UserService {
       }
     }
 
-    let photoUrl;
-
-    if (user.profilePhoto) {
-      const buffer = Buffer.from(user.profilePhoto.replace(/^data:image\/\w+;base64,/, ''), 'base64');
-      const [dataType] = user.profilePhoto.split(';');
-      const [, contentType] = dataType.split(':');
-
-      photoUrl = await AWSMechanism.uploadBuffer(
-        `${Constants.aws.bucket}/profile-photos`,
-        { buffer, id },
-        { contentType },
-      );
-    }
-
     await ModelRepository.updateById(UserModel, id, {
       userType: user.type,
       genderType: user.genderType,
@@ -153,7 +137,6 @@ export default class UserService {
       cpf: user.cpf,
       phone: user.phone,
       birthday: user.birthday,
-      profilePhotoUrl: photoUrl || undefined,
       recoveryToken: user.recoveryToken,
       recoveryTokenExpiresAt: user.recoveryTokenExpiresAt,
 

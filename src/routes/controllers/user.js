@@ -43,7 +43,7 @@ routes.post('/admin',
 
 routes.get('/me',
   authenticate,
-  authorize([UserType.ADMIN, UserType.MEDIC, UserType.PATIENT]),
+  authorize([UserType.ADMIN, UserType.STUDENT]),
   async (req, res, next) => {
     let response;
 
@@ -75,7 +75,7 @@ routes.get('/:id',
 
 routes.get('/',
   authenticate,
-  authorize([UserType.ADMIN, UserType.MEDIC]),
+  authorize([UserType.ADMIN]),
   async (req, res, next) => {
     let response;
 
@@ -96,7 +96,7 @@ routes.get('/',
 
 routes.put('/update-password',
   authenticate,
-  authorize([UserType.ADMIN, UserType.MEDIC, UserType.PATIENT]),
+  authorize([UserType.ADMIN, UserType.STUDENT]),
   body('oldPassword').isString().isLength({ min: 8 }).withMessage(ValidationCodeError.INVALID_PASSWORD),
   body('newPassword').isString().isLength({ min: 8 }).withMessage(ValidationCodeError.INVALID_PASSWORD),
   async (req, res, next) => {
@@ -114,7 +114,7 @@ routes.put('/update-password',
 
 routes.put('/:id',
   authenticate,
-  authorize([UserType.ADMIN, UserType.MEDIC, UserType.PATIENT]),
+  authorize([UserType.ADMIN, UserType.STUDENT]),
   param('id').isUUID().withMessage(ValidationCodeError.INVALID_ID),
   schemaValidation(userSchema.update),
   async (req, res, next) => {

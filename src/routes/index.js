@@ -12,6 +12,7 @@ router.get('/status',
     uptime: msToTime(Date.now() - startedAt),
   }));
 
+router.use('/auth', require('./controllers/auth').default);
 router.use('/user', require('./controllers/user').default);
 
 export default router;

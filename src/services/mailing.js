@@ -55,10 +55,10 @@ export default class MailService {
         year: new Date().getFullYear(),
       });
 
-      const { html } = mjml2html(mjml, { minify: true });
+      const { html } = mjml2html(mjml);
       const access = await GoogleAuthService.OAuth();
 
-      await Mail.send(access, user.email, `${firstName}, seja bem-vind${g} à MedTech!`, html);
+      await Mail.send(access, user.email, `${firstName}, seja bem-vind${g} à UniRepo!`, html);
     } catch (err) {
       throw new ExtendableError(ErrorType.MAIL, err.message, httpStatus.INTERNAL_SERVER_ERROR);
     }
