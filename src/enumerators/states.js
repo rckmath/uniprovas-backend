@@ -13,5 +13,4 @@ const StateList = [
   'Roraima', 'Santa Catarina', 'São Paulo', 'Sergipe', 'Tocantins',
 ];
 
-// eslint-disable-next-line import/prefer-default-export
 export { StateCode, StateList };

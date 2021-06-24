@@ -1,7 +1,7 @@
 import { Op } from 'sequelize';
 
 export default class SearchParameter {
-  static createCommonQuery(searchParameter, includeDeleted = false) {
+  static createCommonQuery(searchParameters, includeDeleted = false) {
     const where = {};
 
     if (!includeDeleted) { where.deletedAt = null; }
@@ -9,55 +9,68 @@ export default class SearchParameter {
     /**
      * Dates
      */
-
-    if (searchParameter.createdAtStart) {
+    if (searchParameters.createdAtStart) {
       where.createdAt = {
         ...where.createdAt,
-        [Op.gte]: searchParameter.createdAtStart,
+        [Op.gte]: searchParameters.createdAtStart,
       };
     }
 
-    if (searchParameter.createdAtEnd) {
+    if (searchParameters.createdAtEnd) {
       where.createdAt = {
         ...where.createdAt,
-        [Op.lte]: searchParameter.createdAtEnd,
+        [Op.lte]: searchParameters.createdAtEnd,
       };
     }
 
-    if (searchParameter.updatedAtStart) {
+    if (searchParameters.updatedAtStart) {
       where.updatedAt = {
         ...where.updatedAt,
-        [Op.gte]: searchParameter.updatedAtStart,
+        [Op.gte]: searchParameters.updatedAtStart,
       };
     }
 
-    if (searchParameter.updatedAtEnd) {
+    if (searchParameters.updatedAtEnd) {
       where.updatedAt = {
         ...where.updatedAt,
-        [Op.lte]: searchParameter.updatedAtEnd,
+        [Op.lte]: searchParameters.updatedAtEnd,
       };
     }
 
     return { where };
   }
 
-  static createUserQuery(searchParameter) {
+  static createUserQuery(searchParameters) {
     const where = {};
 
-    if (searchParameter.email) {
-      where.email = { [Op.iLike]: `%${searchParameter.email}%` };
+    if (searchParameters.email) {
+      where.email = { [Op.iLike]: `%${searchParameters.email}%` };
     }
 
-    if (searchParameter.name) {
-      where.name = { [Op.iLike]: `%${searchParameter.name}%` };
+    if (searchParameters.name) {
+      where.name = { [Op.iLike]: `%${searchParameters.name}%` };
     }
 
-    if (searchParameter.cpf) {
-      where.cpf = searchParameter.cpf;
+    if (searchParameters.cpf) {
+      where.cpf = searchParameters.cpf;
     }
 
-    if (searchParameter.userType) {
-      where.userType = { [Op.or]: searchParameter.userType };
+    if (searchParameters.userType) {
+      where.userType = { [Op.or]: searchParameters.userType };
+    }
+
+    return { where };
+  }
+
+  static createFileQuery(searchParameters) {
+    const where = {};
+
+    if (searchParameters.extension) {
+      where.email = { [Op.iLike]: `%${searchParameters.extension}%` };
+    }
+
+    if (searchParameters.name) {
+      where.name = { [Op.iLike]: `%${searchParameters.name}%` };
     }
 
     return { where };

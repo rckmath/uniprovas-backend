@@ -1,24 +1,33 @@
 import { createDtRangeSearch, stringTrim } from './helper';
 
 export const commonFilters = (req) => {
-  let searchParameter = {};
+  let searchParameters = {};
 
-  searchParameter = createDtRangeSearch(searchParameter, 'createdAtRange', req.query.createdAtRange);
-  searchParameter = createDtRangeSearch(searchParameter, 'updatedAtRange', req.query.updatedAtRange);
+  searchParameters = createDtRangeSearch(searchParameters, 'createdAtRange', req.query.createdAtRange);
+  searchParameters = createDtRangeSearch(searchParameters, 'updatedAtRange', req.query.updatedAtRange);
 
-  return searchParameter;
+  return searchParameters;
 };
 
 export const userFilters = (req) => {
-  let searchParameter = {};
+  let searchParameters = {};
 
-  searchParameter = stringTrim(searchParameter, 'email', req.query.email);
-  searchParameter = stringTrim(searchParameter, 'name', req.query.name);
-  searchParameter = stringTrim(searchParameter, 'cpf', req.query.cpf);
+  searchParameters = stringTrim(searchParameters, 'email', req.query.email);
+  searchParameters = stringTrim(searchParameters, 'name', req.query.name);
+  searchParameters = stringTrim(searchParameters, 'cpf', req.query.cpf);
 
   if (req.query.userType) {
-    searchParameter.userType = req.query.userType.split(',');
+    searchParameters.userType = req.query.userType.split(',');
   }
 
-  return searchParameter;
+  return searchParameters;
+};
+
+export const fileFilters = (req) => {
+  let searchParameters = {};
+
+  searchParameters = stringTrim(searchParameters, 'extension', req.query.extension);
+  searchParameters = stringTrim(searchParameters, 'name', req.query.name);
+
+  return searchParameters;
 };

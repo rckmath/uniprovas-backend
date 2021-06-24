@@ -4,8 +4,6 @@ import httpStatus from 'http-status';
 import ExtendableError from '../../utils/error/extendable';
 import ErrorType from '../../enumerators/error';
 
-const exclude = ['password', 'recoveryToken', 'recoveryTokenExpiresAt'];
-
 export default class ModelRepository {
   static async create(ModelEntity, data, options) {
     let response = null;
@@ -17,8 +15,6 @@ export default class ModelRepository {
         transaction: options ? options.transaction : null,
         returning: true,
       });
-
-      exclude.forEach((o) => delete response.dataValues[o]);
     } catch (err) {
       throw new ExtendableError(ErrorType.PERSISTENCE, err.message, httpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -32,9 +28,7 @@ export default class ModelRepository {
     try {
       options = {
         ...options,
-        attributes: (options && options.attributes) || {
-          exclude,
-        },
+        attributes: (options && options.attributes),
       };
 
       response = await ModelEntity.findOne(options);
@@ -98,8 +92,6 @@ export default class ModelRepository {
       });
 
       [, [response]] = response;
-
-      exclude.forEach((o) => delete response.dataValues[o]);
     } catch (err) {
       throw new ExtendableError(ErrorType.PERSISTENCE, err.message, httpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -111,17 +103,15 @@ export default class ModelRepository {
     let response = null;
 
     try {
-      response = await ModelEntity.update(
-        {
-          deletedAt: dayjs().toDate(),
-          updatedBy,
-        },
-        {
-          where: { id },
-          transaction: options && options.transaction,
-          returning: true,
-        },
-      );
+      response = await ModelEntity.update({
+        deletedAt: dayjs().toDate(),
+        updatedBy,
+      },
+      {
+        where: { id },
+        transaction: options && options.transaction,
+        returning: true,
+      });
       [, [response]] = response;
     } catch (err) {
       throw new ExtendableError(ErrorType.PERSISTENCE, err.message, httpStatus.INTERNAL_SERVER_ERROR);

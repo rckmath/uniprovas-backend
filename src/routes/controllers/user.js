@@ -80,13 +80,13 @@ routes.get('/',
     let response;
 
     try {
-      const searchParameter = {
+      const searchParameters = {
         ...controllerPaginationHelper(req),
         ...commonFilters(req),
         ...userFilters(req),
       };
 
-      response = await UserService.getAllWithPagination(searchParameter, req.user);
+      response = await UserService.getAllWithPagination(searchParameters, req.user);
     } catch (err) {
       return next(err);
     }

@@ -40,4 +40,6 @@ export default class Constants {
     region: process.env.AWS_REGION,
     bucket: process.env.AWS_BUCKET_NAME,
   }
+
+  static fileSizeLimit = process.env.FILE_SIZE_LIMIT;
 }

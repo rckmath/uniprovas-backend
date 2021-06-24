@@ -1,22 +1,22 @@
 import dayjs from 'dayjs';
 
-export function stringTrim(searchParameter, attrName, attrValue) {
+export function stringTrim(searchParameters, attrName, attrValue) {
   if (attrName && attrValue && attrValue.trim().length > 0) {
-    searchParameter[`${attrName}`] = attrValue.trim();
+    searchParameters[`${attrName}`] = attrValue.trim();
   }
 
-  return searchParameter;
+  return searchParameters;
 }
 
-export function createDtRangeSearch(searchParameter, attrName, attrValue) {
+export function createDtRangeSearch(searchParameters, attrName, attrValue) {
   if (attrName && attrValue) {
     const [startAt, endAt] = attrValue.split(',');
 
-    searchParameter[`${attrName}`] = {
+    searchParameters[`${attrName}`] = {
       startAt: (startAt && dayjs(startAt).isValid()) && dayjs(startAt).format(),
       endAt: (endAt && dayjs(endAt).isValid()) && dayjs(endAt).format(),
     };
   }
 
-  return searchParameter;
+  return searchParameters;
 }
