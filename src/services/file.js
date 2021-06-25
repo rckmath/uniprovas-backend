@@ -10,11 +10,14 @@ import SearchParameter from './search-parameters';
 import S3Amazon from '../mechanisms/storage-aws';
 import Constants from '../constants';
 import { UserType } from '../enumerators/user';
+import FileCategoryService from './file-category';
 
 const FileModel = db.models.File;
+const UserModel = db.models.User;
 
 export default class FileService {
   static async upload(file, actor) {
+    let response;
     const extension = file.data.originalname.split('.').pop();
     const timestamp = dayjs().unix();
 
@@ -27,25 +30,39 @@ export default class FileService {
       contentType: file.data.mimetype,
     });
 
-    const response = await ModelRepository.create(FileModel, {
-      url,
-      extension,
-      timestamp,
+    const transaction = await db.sequelize.transaction();
 
-      userId: actor && actor.id,
+    try {
+      response = await ModelRepository.create(FileModel, {
+        url,
+        extension,
+        timestamp,
 
-      title: file.title,
-      name: fileCompleteName,
-      mimeType: file.data.mimetype,
-      size: file.data.size,
-      upVotes: file.upVotes,
-      downloadCount: file.downloadCount,
-      description: file.description,
-      hide: !!file.hide,
+        userId: actor && actor.id,
 
-      createdBy: actor && actor.id,
-      updatedBy: actor && actor.id,
-    });
+        title: file.title,
+        name: fileCompleteName,
+        mimeType: file.data.mimetype,
+        size: file.data.size,
+        upVotes: file.upVotes,
+        downloadCount: file.downloadCount,
+        description: file.description,
+        hide: !!file.hide,
+
+        createdBy: actor && actor.id,
+        updatedBy: actor && actor.id,
+      }, { transaction });
+
+      if (file.categories && file.categories.length) {
+        await FileCategoryService.createByCategoryList(response.id, file.categories, actor, { transaction });
+      }
+
+      await transaction.commit();
+    } catch (err) {
+      if (transaction) await transaction.rollback();
+
+      throw err;
+    }
 
     return response;
   }
@@ -91,8 +108,10 @@ export default class FileService {
 
     where = { ...where, ...commonQuery.where, ...fileQuery.where };
 
-    if (where.userId && actor.userType === UserType.STUDENT) {
-      if (where.userId !== actor.id) { where.hide = false; }
+    if (actor.userType === UserType.STUDENT) {
+      where.hide = false;
+
+      if (where.userId === actor.id) { delete where.hide; }
     }
 
     response = await ModelRepository.selectWithPagination(FileModel, {
@@ -100,6 +119,15 @@ export default class FileService {
       offset: searchParameters.offset,
       limit: searchParameters.limit,
       order: [serviceOrderHelper(searchParameters)],
+      attributes: {
+        exclude: ['userId', 'mimeType', 'createdBy', 'updatedBy', 'deletedAt'],
+      },
+      include: {
+        model: UserModel,
+        as: 'publisher',
+        where: { deletedAt: null },
+        attributes: ['name', 'profilePhotoUrl'],
+      },
     });
 
     return response;
@@ -107,7 +135,7 @@ export default class FileService {
 
   static async updateById(id, file, actor) {
     if (actor && actor.userType === UserType.STUDENT) {
-      const foundFile = await ModelRepository.selectOne({
+      const foundFile = await ModelRepository.selectOne(FileModel, {
         where: { id, deletedAt: null },
         attributes: ['id', 'userId'],
       });
