@@ -35,9 +35,10 @@ export function controllerPaginationHelper(req) {
   };
 }
 
-export function serviceOrderHelper(searchParameter) {
-  const order = (searchParameter.orderBy ? searchParameter.orderBy : ['createdAt']);
+export function serviceOrderHelper(searchParameters) {
+  const order = (searchParameters.orderBy ? searchParameters.orderBy : ['createdAt']);
 
-  order.push(searchParameter.isDESC ? 'DESC' : 'ASC');
+  order.push(searchParameters.isDESC ? 'DESC' : 'ASC');
+
   return order;
 }

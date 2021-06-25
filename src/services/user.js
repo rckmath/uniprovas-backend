@@ -4,13 +4,11 @@ import dayjs from 'dayjs';
 import httpStatus from 'http-status';
 import ModelRepository from '../db/repository/base';
 import db from '../db/database';
-import Constants from '../constants';
 import ExtendableError from '../utils/error/extendable';
 import { UserCodeError, ValidationCodeError, AuthCodeError } from '../utils/error/business-errors';
 import ErrorType from '../enumerators/error';
 import { UserType } from '../enumerators/user';
 import { serviceOrderHelper, sha256 } from '../utils/utils';
-import AWSMechanism from '../mechanisms/storage-aws';
 import SearchParameter from './search-parameters';
 import MailService from './mailing';
 
@@ -71,6 +69,8 @@ export default class UserService {
       userType: user.type,
 
       createdBy: actor && actor.id,
+    }, {
+      exclude: ['password', 'recoveryToken', 'recoveryTokenExpiresAt'],
     });
 
     MailService.sendRegister(response);
@@ -100,20 +100,20 @@ export default class UserService {
     return user;
   }
 
-  static async getAllWithPagination(searchParameter) {
+  static async getAllWithPagination(searchParameters) {
     let response = null;
     let where = {};
 
-    const commonQuery = SearchParameter.createCommonQuery(searchParameter);
-    const userQuery = SearchParameter.createUserQuery(searchParameter);
+    const commonQuery = SearchParameter.createCommonQuery(searchParameters);
+    const userQuery = SearchParameter.createUserQuery(searchParameters);
 
     where = { ...where, ...commonQuery.where, ...userQuery.where };
 
     response = await ModelRepository.selectWithPagination(UserModel, {
       where,
-      offset: searchParameter.offset,
-      limit: searchParameter.limit,
-      order: [serviceOrderHelper(searchParameter)],
+      offset: searchParameters.offset,
+      limit: searchParameters.limit,
+      order: [serviceOrderHelper(searchParameters)],
     });
 
     return response;

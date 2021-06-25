@@ -1,4 +1,5 @@
 import userSchema from './user';
 import authSchema from './auth';
+import fileSchema from './file';
 
-export { userSchema, authSchema };
+export { userSchema, authSchema, fileSchema };
