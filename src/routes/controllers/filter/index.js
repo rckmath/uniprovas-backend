@@ -29,5 +29,13 @@ export const fileFilters = (req) => {
   searchParameters = stringTrim(searchParameters, 'extension', req.query.extension);
   searchParameters = stringTrim(searchParameters, 'name', req.query.name);
 
+  if (req.query.hide === 'true' || req.query.hide === 'false') {
+    searchParameters.hide = req.query.hide === 'true';
+  }
+
+  if (req.query.userId) {
+    searchParameters.userId = req.query.userId;
+  }
+
   return searchParameters;
 };

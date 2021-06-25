@@ -15,6 +15,11 @@ export default class ModelRepository {
         transaction: options ? options.transaction : null,
         returning: true,
       });
+
+      if (options && options.exclude) {
+        options.exclude.forEach((o) => delete response.dataValues[o]);
+      }
+
     } catch (err) {
       throw new ExtendableError(ErrorType.PERSISTENCE, err.message, httpStatus.INTERNAL_SERVER_ERROR);
     }

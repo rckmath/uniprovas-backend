@@ -69,6 +69,8 @@ export default class UserService {
       userType: user.type,
 
       createdBy: actor && actor.id,
+    }, {
+      exclude: ['password', 'recoveryToken', 'recoveryTokenExpiresAt'],
     });
 
     MailService.sendRegister(response);

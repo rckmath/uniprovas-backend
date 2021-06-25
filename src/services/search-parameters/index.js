@@ -73,6 +73,14 @@ export default class SearchParameter {
       where.name = { [Op.iLike]: `%${searchParameters.name}%` };
     }
 
+    if (searchParameters.hide !== undefined) {
+      where.hide = searchParameters.hide;
+    }
+
+    if (searchParameters.userId) {
+      where.userId = searchParameters.userId;
+    }
+
     return { where };
   }
 }

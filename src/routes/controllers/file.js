@@ -28,7 +28,7 @@ routes.post('/',
         throw new ExtendableError(ErrorType.BUSINESS, ValidationCodeError.INVALID_FILE, httpStatus.BAD_REQUEST);
       }
 
-      response = await FileService.upload({ ...req.body, data: req.file });
+      response = await FileService.upload({ ...req.body, data: req.file }, req.user);
     } catch (err) {
       return next(err);
     }
@@ -43,7 +43,13 @@ routes.get('/my',
     let response;
 
     try {
-      response = await FileService.getMyFiles(req.user.id);
+      const searchParameters = {
+        ...controllerPaginationHelper(req),
+        ...commonFilters(req),
+        ...fileFilters(req),
+      };
+
+      response = await FileService.getMyFiles(searchParameters, req.user);
     } catch (err) {
       return next(err);
     }
@@ -70,7 +76,7 @@ routes.get('/:id',
 
 routes.get('/',
   authenticate,
-  authorize([UserType.ADMIN]),
+  authorize([UserType.ADMIN, UserType.STUDENT]),
   async (req, res, next) => {
     let response;
 

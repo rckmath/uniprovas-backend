@@ -26,16 +26,12 @@ export default class S3Amazon {
         ContentType: file.contentType,
       };
 
-      console.log(uploadParams);
-
-      return;
-
       await S3.upload(uploadParams).promise();
 
       const getParams = {
         Key: file.name,
         Bucket: bucket,
-        Expires: dayjs(options.expiresAt).diff(dayjs(), 's'),
+        Expires: options && dayjs(options.expiresAt).diff(dayjs(), 's'),
       };
 
       response = await S3.getSignedUrlPromise('getObject', getParams);
