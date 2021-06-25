@@ -1,0 +1,59 @@
+version: "3.8"
+
+x-common_env: &common_env
+  PORT: ${PORT}
+  HOST: ${HOST}
+  NODE_ENV: ${NODE_ENV}
+  SYSTEM_PASSWORD: ${SYSTEM_PASSWORD}
+  DATABASE_PORT: ${DATABASE_PORT}
+  DATABASE_HOST: ${DATABASE_HOST}
+  DATABASE_NAME: ${DATABASE_NAME}
+  DATABASE_USER: ${DATABASE_USER}
+  DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+  AUTH_JWT_SECRET: ${AUTH_JWT_SECRET}
+  AUTH_ACCESS_TOKEN_LIFETIME: ${AUTH_ACCESS_TOKEN_LIFETIME}
+  AUTH_REFRESH_TOKEN_LIFETIME: ${AUTH_REFRESH_TOKEN_LIFETIME}
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - ${PORT}:${PORT}
+    environment:
+      <<: *common_env
+    depends_on:
+      - database
+    links:
+      - database:database
+    volumes:
+      - type: bind
+        source: ./
+        target: /home/app/unirepo
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+        reservations:
+          memory: 128M
+  database:
+    image: postgres:alpine
+    ports:
+      - "3210:5432"
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - unirepo-data:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 64M
+
+volumes:
+  unirepo-data:
+    name: "unirepo"
