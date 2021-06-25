@@ -42,6 +42,19 @@ export default (sequelize, DataTypes) => {
       as: 'publisher',
       foreignKey: 'userId',
     });
+
+    File.hasOne(models.FileCategory, {
+      as: 'fileCategory',
+      foreignKey: 'fileId',
+    });
+    File.belongsToMany(models.Category, {
+      as: 'categories',
+      foreignKey: 'fileId',
+      through: {
+        model: models.FileCategory,
+        as: 'quizCategory',
+      },
+    });
   };
 
   return File;

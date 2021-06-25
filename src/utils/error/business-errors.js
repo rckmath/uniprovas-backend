@@ -19,6 +19,10 @@ const FileCodeError = {
   FILE_NOT_FOUND: 'file_not_found',
 };
 
+const CategoryCodeError = {
+  CATEGORY_NOT_FOUND: 'category_not_found',
+};
+
 const AuthCodeError = {
   BAD_CREDENTIALS: 'bad_credentials',
   ACCESS_NOT_ALLOWED: 'access_not_allowed',
@@ -29,5 +33,6 @@ export {
   UserCodeError,
   FileCodeError,
   AuthCodeError,
+  CategoryCodeError,
   ValidationCodeError,
 };
